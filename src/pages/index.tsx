@@ -1,8 +1,11 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
+import type { NextPage } from 'next';
+import Head from 'next/head';
 
-import Counter from '../features/counter/Counter'
-import styles from '../styles/Home.module.css'
+import Counter from '../features/counter/Counter';
+import styles from '../styles/Home.module.css';
+import { Copyright } from '@mui/icons-material';
+import { Container, Box, Typography } from '@mui/material';
+import Link from 'next/link';
 
 const IndexPage: NextPage = () => {
   return (
@@ -12,52 +15,32 @@ const IndexPage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <header className={styles.header}>
-        <img src="/logo.svg" className={styles.logo} alt="logo" />
         <Counter />
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className={styles.link}
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className={styles.link}
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className={styles.link}
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className={styles.link}
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
       </header>
+      <Container maxWidth="lg">
+        <Box
+          sx={{
+            my: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Typography variant="h4" component="h1" gutterBottom>
+            Material UI - Next.js example in TypeScript
+          </Typography>
+          <Link href="/about" color="secondary">
+            Go to the about page
+          </Link>
+          <Copyright />
+        </Box>
+      </Container>
     </div>
-  )
-}
+  );
+};
 
-export default IndexPage
+export default IndexPage;
