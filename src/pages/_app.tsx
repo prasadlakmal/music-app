@@ -1,14 +1,12 @@
-import '../styles/globals.css';
-
 import { Provider } from 'react-redux';
 import type { AppProps } from 'next/app';
 
-import store from '../store';
 import { CacheProvider, EmotionCache } from '@emotion/react';
-import createEmotionCache from '../createEmotionCache';
+import createEmotionCache from '@utils/createEmotionCache';
 import Head from 'next/head';
 import { CssBaseline, ThemeProvider } from '@mui/material';
-import theme from '../theme';
+import theme from '@themes/defaultTheme';
+import store from 'src/store';
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
