@@ -9,7 +9,6 @@ export const roboto = Roboto({
   fallback: ['Helvetica', 'Arial', 'sans-serif'],
 });
 
-// Create a theme instance.
 const defaultTheme = createTheme({
   palette: {
     primary: {
@@ -23,7 +22,7 @@ const defaultTheme = createTheme({
     },
   },
   typography: {
-    fontFamily: roboto.style.fontFamily, // Tell VSCode to format files on save
+    fontFamily: roboto.style.fontFamily,
   },
 });
 

@@ -6,7 +6,7 @@ import createEmotionCache from '@utils/createEmotionCache';
 import Head from 'next/head';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import theme from '@themes/defaultTheme';
-import store from 'src/store';
+import store from 'src/common/store';
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
