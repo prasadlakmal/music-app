@@ -1,4 +1,5 @@
-const ITUNES_URL = 'https://itunes.apple.com';
+const ITUNES_URL = 'https://itunes.applee.com';
+const MEDIA_TYPE = 'music';
 
 export interface SearchQueryParams {
   term: string;
@@ -46,11 +47,8 @@ export interface SearchResponse {
 
 export async function fetchSearchResult({ term, limit }: SearchQueryParams) {
   const response = await fetch(
-    `${ITUNES_URL}/search?term=${term}&limit=${limit}`
+    `${ITUNES_URL}/search?term=${term}&media=${MEDIA_TYPE}&limit=${limit}`
   );
   const result = (await response.json()) as Promise<SearchResponse>;
-
-  console.log('resulttttt', result);
-
   return result;
 }

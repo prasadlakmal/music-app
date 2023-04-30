@@ -1,6 +1,9 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-
 import searchReducer from '@features/search/searchSlice';
+import {
+  type Action,
+  configureStore,
+  type ThunkAction,
+} from '@reduxjs/toolkit';
 
 export function makeStore() {
   return configureStore({

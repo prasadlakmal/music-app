@@ -1,25 +1,20 @@
-import type { NextPage } from 'next';
-import Head from 'next/head';
-
-import { Copyright } from '@mui/icons-material';
-import {
-  Box,
-  Typography,
-  TextField,
-  AppBar,
-  Toolbar,
-  ListItemAvatar,
-  Avatar,
-  ListItemText,
-  List,
-  ListItem,
-} from '@mui/material';
-import CameraIcon from '@mui/icons-material/PhotoCamera';
 import React, { useEffect, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
-import { useAppDispatch, useAppSelector } from '@hooks/redux';
 import { searchAsync, selectSearch } from '@features/search/searchSlice';
+import { useAppDispatch, useAppSelector } from '@hooks/redux';
 import useDebounce from '@hooks/useDebounce';
+import CameraIcon from '@mui/icons-material/PhotoCamera';
+import {
+  AppBar,
+  Avatar,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  TextField,
+  Toolbar,
+} from '@mui/material';
+import type { NextPage } from 'next';
 
 const MUIComponents = {
   // eslint-disable-next-line react/display-name
@@ -42,7 +37,7 @@ const MUIComponents = {
       </ListItem>
     );
   },
-  Footer: () => {
+  Footer: (props) => {
     return (
       <div
         style={{
@@ -55,28 +50,25 @@ const MUIComponents = {
       </div>
     );
   },
+  EmptyPlaceholder: () => <div>Emptyyyyy</div>,
 };
 
 const IndexPage: NextPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const debouncedValue = useDebounce(searchTerm, 500);
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [limit, setLimit] = useState(10);
 
   const dispatch = useAppDispatch();
-  const { results } = useAppSelector(selectSearch);
+  const { results, reachedLastPage } = useAppSelector(selectSearch);
 
   useEffect(() => {
-    if (debouncedValue) {
-      dispatch(searchAsync({ term: debouncedValue, limit }));
+    if (debouncedSearchTerm) {
+      dispatch(searchAsync({ term: debouncedSearchTerm, limit }));
     }
-  }, [debouncedValue, dispatch, limit]);
+  }, [debouncedSearchTerm, dispatch, limit]);
 
   return (
     <>
-      <Head>
-        <title>Redux Toolkit</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <AppBar position="sticky">
         <Toolbar>
           <CameraIcon sx={{ mr: 2 }} />
@@ -87,7 +79,9 @@ const IndexPage: NextPage = () => {
         <Virtuoso
           style={{ height: 795 }}
           data={results}
-          endReached={() => setLimit((currentLimit) => currentLimit + 10)}
+          endReached={() => {
+            if (!reachedLastPage) setLimit((currentLimit) => currentLimit + 10);
+          }}
           overscan={200}
           components={MUIComponents}
           itemContent={(index, result) => {
@@ -106,22 +100,6 @@ const IndexPage: NextPage = () => {
           }}
         />
       </main>
-      {/* Footer */}
-      <Box sx={{ bgcolor: 'background.paper' }} component="footer">
-        <Typography variant="h6" align="center" gutterBottom>
-          Footer
-        </Typography>
-        <Typography
-          variant="subtitle1"
-          align="center"
-          color="text.secondary"
-          component="p"
-        >
-          Something here to give the footer a purpose!
-        </Typography>
-        <Copyright />
-      </Box>
-      {/* End footer */}
     </>
   );
 };
