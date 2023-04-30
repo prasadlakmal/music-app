@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { Copyright } from '@mui/icons-material';
 import { Box, Typography } from '@mui/material';
 import Head from 'next/head';
 
@@ -16,7 +17,18 @@ const Layout = ({ children }: LayoutProps) => {
       </Head>
       {children}
       {/* Footer */}
-      <Box sx={{ bgcolor: 'background.paper' }} component="footer">
+      <Box
+        sx={{
+          bgcolor: 'background.paper',
+          bottom: 0,
+          position: 'fixed',
+          width: '100%',
+          paddingBottom: '24px',
+          display: 'grid',
+          justifyItems: 'center',
+        }}
+        component="footer"
+      >
         <Typography variant="h6" align="center" gutterBottom>
           Footer
         </Typography>
@@ -28,6 +40,7 @@ const Layout = ({ children }: LayoutProps) => {
         >
           Something here to give the footer a purpose!
         </Typography>
+        <Copyright />
       </Box>
       {/* End footer */}
     </>

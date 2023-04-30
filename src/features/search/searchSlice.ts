@@ -1,24 +1,26 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { AppState } from 'src/common/store';
 
-import {
-  fetchSearchResult,
-  type SearchQueryParams,
-  type SearchResponse,
-} from './searchApi';
+import { fetchSearchResult } from './searchApi';
+import type {
+  Result,
+  SearchQueryParams,
+  SearchResponse,
+  Status,
+} from './types';
 
 const MAX_LIMIT = 200;
 
 interface SearchState {
-  results: SearchResponse['results'];
-  loading: 'idle' | 'pending' | 'succeeded' | 'failed';
+  results: Result[];
+  status: Status;
   reachedLastPage: boolean;
   message: string;
 }
 
 const initialState = {
   results: [],
-  loading: 'idle',
+  status: 'idle',
   reachedLastPage: false,
   message: '',
 } as SearchState;
@@ -50,24 +52,27 @@ export const searchSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(searchAsync.pending, (state) => {
-        state.loading = 'pending';
+        state.status = 'pending';
       })
       .addCase(searchAsync.fulfilled, (state, { payload }) => {
-        state.loading = 'succeeded';
+        state.status = 'succeeded';
         if (payload.resultCount === MAX_LIMIT) {
           state.reachedLastPage = true;
         }
         if (payload.resultCount === 0) {
+          state.status = 'no-data';
           state.message = 'No resutls were found';
         }
         state.results = payload.results;
       })
       .addCase(searchAsync.rejected, (state, { payload }) => {
-        state.loading = 'failed';
+        state.status = 'failed';
         state.message = payload as string;
       });
   },
 });
+
+export const { reset } = searchSlice.actions;
 
 export const selectSearch = (state: AppState) => state.search;
 

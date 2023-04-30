@@ -1,104 +1,81 @@
 import React, { useEffect, useState } from 'react';
-import { Virtuoso } from 'react-virtuoso';
-import { searchAsync, selectSearch } from '@features/search/searchSlice';
+import CircularIndeterminate from '@components/circular-indeterminate';
+import SearchResult from '@features/search/search-result';
+import { reset, searchAsync, selectSearch } from '@features/search/searchSlice';
 import { useAppDispatch, useAppSelector } from '@hooks/redux';
 import useDebounce from '@hooks/useDebounce';
 import CameraIcon from '@mui/icons-material/PhotoCamera';
-import {
-  AppBar,
-  Avatar,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  TextField,
-  Toolbar,
-} from '@mui/material';
+import { Alert, AppBar, InputProps, TextField, Toolbar } from '@mui/material';
 import type { NextPage } from 'next';
 
-const MUIComponents = {
-  // eslint-disable-next-line react/display-name
-  List: React.forwardRef(({ style, children }, listRef) => {
-    return (
-      <List
-        style={{ padding: 0, ...style, margin: 0 }}
-        component="div"
-        ref={listRef}
-      >
-        {children}
-      </List>
-    );
-  }),
-
-  Item: ({ children, ...props }) => {
-    return (
-      <ListItem component="div" {...props} style={{ margin: 0 }}>
-        {children}
-      </ListItem>
-    );
-  },
-  Footer: (props) => {
-    return (
-      <div
-        style={{
-          padding: '2rem',
-          display: 'flex',
-          justifyContent: 'center',
-        }}
-      >
-        Loading...
-      </div>
-    );
-  },
-  EmptyPlaceholder: () => <div>Emptyyyyy</div>,
-};
+const DEBOUNCE_DELAY = 500;
+const DEFAULT_LIMIT = 10;
 
 const IndexPage: NextPage = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
-  const [limit, setLimit] = useState(10);
-
   const dispatch = useAppDispatch();
-  const { results, reachedLastPage } = useAppSelector(selectSearch);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [limit, setLimit] = useState(DEFAULT_LIMIT);
+  const debouncedSearchTerm = useDebounce(searchTerm, DEBOUNCE_DELAY);
+
+  const { results, reachedLastPage, status, message } =
+    useAppSelector(selectSearch);
+
+  const showIdleMessage = status === 'idle';
+  const showLoadingSpinner = results.length === 0 && status === 'pending';
+  const showFailedMessage = status === 'failed' || status === 'no-data';
+  const showResults =
+    !showIdleMessage && !showLoadingSpinner && !showFailedMessage;
+  const shouldSendSearchRequest = !!searchTerm.length;
 
   useEffect(() => {
-    if (debouncedSearchTerm) {
+    if (shouldSendSearchRequest) {
       dispatch(searchAsync({ term: debouncedSearchTerm, limit }));
     }
-  }, [debouncedSearchTerm, dispatch, limit]);
+  }, [debouncedSearchTerm, dispatch, limit, shouldSendSearchRequest]);
+
+  const handleTextChange: InputProps['onChange'] = (e) => {
+    const value = e.target.value.trim();
+    if (!value) {
+      dispatch(reset());
+      setLimit(DEFAULT_LIMIT);
+      setSearchTerm('');
+    } else {
+      setSearchTerm(e.target.value);
+    }
+  };
+
+  const endReached = () => {
+    if (!reachedLastPage) setLimit((currentLimit) => currentLimit + 10);
+  };
 
   return (
     <>
       <AppBar position="sticky">
         <Toolbar>
           <CameraIcon sx={{ mr: 2 }} />
-          <TextField onChange={(e) => setSearchTerm(e.target.value)} />
+          <TextField onChange={handleTextChange} />
         </Toolbar>
       </AppBar>
       <main>
-        <Virtuoso
-          style={{ height: 795 }}
-          data={results}
-          endReached={() => {
-            if (!reachedLastPage) setLimit((currentLimit) => currentLimit + 10);
-          }}
-          overscan={200}
-          components={MUIComponents}
-          itemContent={(index, result) => {
-            return (
-              <>
-                <ListItemAvatar>
-                  <Avatar src={result.artworkUrl100} />
-                </ListItemAvatar>
-
-                <ListItemText
-                  primary={result.trackName}
-                  secondary={<span>{result.artistName}</span>}
-                />
-              </>
-            );
-          }}
-        />
+        {showLoadingSpinner && <CircularIndeterminate />}
+        {showIdleMessage && (
+          <Alert
+            icon={false}
+            sx={{ justifyContent: 'center', paddingTop: '10px' }}
+          >
+            Welcome to iTunes music search!
+          </Alert>
+        )}
+        {showFailedMessage && (
+          <Alert
+            icon={false}
+            sx={{ justifyContent: 'center', paddingTop: '10px' }}
+            severity="error"
+          >
+            {message}
+          </Alert>
+        )}
+        {showResults && <SearchResult data={results} endReached={endReached} />}
       </main>
     </>
   );
