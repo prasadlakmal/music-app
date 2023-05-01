@@ -12,7 +12,7 @@ import type { NextPage } from 'next';
 const DEBOUNCE_DELAY = 500;
 const DEFAULT_LIMIT = 10;
 
-const IndexPage: NextPage = () => {
+const SearchPage: NextPage = () => {
   const dispatch = useAppDispatch();
   const [searchTerm, setSearchTerm] = useState('');
   const [limit, setLimit] = useState(DEFAULT_LIMIT);
@@ -96,4 +96,4 @@ const IndexPage: NextPage = () => {
   );
 };
 
-export default IndexPage;
+export default SearchPage;

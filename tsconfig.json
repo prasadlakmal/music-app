@@ -17,8 +17,8 @@
     "incremental": true,
     "paths": {
       "@themes/*": ["src/common/themes/*"],
-      "@components/*": ["src/components/*"],
       "@utils/*": ["src/common/utils/*"],
+      "@components/*": ["src/components/*"],
       "@features/*": ["src/features/*"],
       "@pages/*": ["src/pages/*"],
       "@hooks/*": ["src/hooks/*"]
