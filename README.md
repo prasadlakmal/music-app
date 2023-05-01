@@ -1,29 +1,33 @@
-# Redux Toolkit TypeScript Example
+# iTunes Music Search App
 
-This example shows how to integrate Next.js with [Redux Toolkit](https://redux-toolkit.js.org).
+This demo app has been developed using following tech stack.
 
-The **Redux Toolkit** is a standardized way to write Redux logic (create actions and reducers, setup the store with some default middlewares like redux devtools extension). This example demonstrates each of these features with Next.js
+- NextJS
+- React
+- TypeScript
+- Redux Toolkit
+- Material-UI
+- Jest + @testing-library/react
+- NodeJS + Express for static serving
 
-## Deploy your own
+## Run
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example):
+Clone this repo and run `npm install` to install all dependencies.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-redux&project-name=with-redux&repository-name=with-redux)
-
-## How to use
-
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example:
+### To run in development mode
 
 ```bash
-npx create-next-app --example with-redux with-redux-app
+npm run dev
+```
+
+### To build and deploy
+
+```bash
+npm run build
 ```
 
 ```bash
-yarn create next-app --example with-redux with-redux-app
+npm run start
 ```
 
-```bash
-pnpm create next-app --example with-redux with-redux-app
-```
-
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+Check `package.json` for additional scripts.
