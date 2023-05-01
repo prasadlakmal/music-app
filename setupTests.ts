@@ -1,4 +1,6 @@
-import '@testing-library/jest-dom'
-import { loadEnvConfig } from '@next/env'
+import { loadEnvConfig } from '@next/env';
 
-loadEnvConfig(__dirname, true, { info: () => null, error: console.error })
+import 'whatwg-fetch';
+import '@testing-library/jest-dom';
+
+loadEnvConfig(__dirname, true, { info: () => null, error: console.error });

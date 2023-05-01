@@ -1,6 +1,6 @@
 import type { SearchQueryParams, SearchResponse } from './types';
 
-const ITUNES_URL = 'https://itunes.apple.com';
+export const ITUNES_URL = 'https://itunes.apple.com';
 const MEDIA_TYPE = 'music';
 
 export async function fetchSearchResult({ term, limit }: SearchQueryParams) {

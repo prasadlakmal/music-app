@@ -6,7 +6,6 @@ import { useAppDispatch, useAppSelector } from '@hooks/redux';
 import useDebounce from '@hooks/useDebounce';
 import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
 import { Alert, AppBar, InputProps, TextField, Toolbar } from '@mui/material';
-import isNewSearchQuery from '@utils/search';
 import type { NextPage } from 'next';
 
 const DEBOUNCE_DELAY = 500;
@@ -39,10 +38,9 @@ const SearchPage: NextPage = () => {
     const value = e.target.value;
     if (!value.trim()) {
       dispatch(reset());
-    }
-    if (isNewSearchQuery(searchTerm, value)) {
       setLimit(DEFAULT_LIMIT);
     }
+
     setSearchTerm(value);
   };
 
@@ -50,7 +48,7 @@ const SearchPage: NextPage = () => {
     if (!reachedLastPage) setLimit((currentLimit) => currentLimit + 10);
   };
 
-  const alertString = () => {
+  const alertText = () => {
     if (showIdleMessage) {
       return 'Welcome to iTunes music search!';
     }
@@ -70,6 +68,7 @@ const SearchPage: NextPage = () => {
             onChange={handleTextChange}
             label="Search for songs, albums or artists"
             variant="filled"
+            value={searchTerm}
           />
         </Toolbar>
       </AppBar>
@@ -81,7 +80,7 @@ const SearchPage: NextPage = () => {
             sx={{ justifyContent: 'center', mt: 2 }}
             severity={showFailedMessage ? 'error' : 'info'}
           >
-            {alertString()}
+            {alertText()}
           </Alert>
         )}
         {showResults && (
