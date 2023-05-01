@@ -4,7 +4,7 @@ import { renderWithProviders } from '@utils/rtl-utils';
 import { setupServer } from 'msw/node';
 
 import { handlers } from './../common/mocks/handlers';
-import SearchPage from '.';
+import { SearchPage } from './index.page';
 
 const server = setupServer(...handlers);
 
@@ -46,7 +46,7 @@ describe('Search Page', () => {
     await waitFor(() => expect(welcomeMessage).not.toBeInTheDocument());
   });
 
-  it('should show welcome message back when user backspace search input', async () => {
+  it('should show welcome message back again when user backspace search input', async () => {
     const user = userEvent.setup();
     renderWithProviders(<SearchPage />);
     const searchInput = screen.getByRole('textbox', {

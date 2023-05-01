@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import type { AppState } from 'src/common/store';
+import type { AppState } from 'src/store';
 
 import { fetchSearchResult } from './searchApi';
 import type {

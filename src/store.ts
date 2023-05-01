@@ -6,6 +6,7 @@ import {
   StateFromReducersMapObject,
   type ThunkAction,
 } from '@reduxjs/toolkit';
+import { createWrapper } from 'next-redux-wrapper';
 
 const reducer = {
   search: searchReducer,
@@ -13,7 +14,8 @@ const reducer = {
 
 export type AppState = StateFromReducersMapObject<typeof reducer>;
 
-export function makeStore(preloadedState?: PreloadedState<AppState>) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function makeStore(preloadedState?: PreloadedState<any>) {
   return configureStore({
     reducer,
     preloadedState,
@@ -33,4 +35,4 @@ export type AppThunk<ReturnType = void> = ThunkAction<
   Action<string>
 >;
 
-export default store;
+export const wrapper = createWrapper(makeStore, { debug: true });

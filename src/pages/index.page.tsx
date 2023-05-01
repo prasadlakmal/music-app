@@ -7,11 +7,12 @@ import useDebounce from '@hooks/useDebounce';
 import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
 import { Alert, AppBar, InputProps, TextField, Toolbar } from '@mui/material';
 import type { NextPage } from 'next';
+import { wrapper } from 'src/store';
 
 const DEBOUNCE_DELAY = 500;
 const DEFAULT_LIMIT = 10;
 
-const SearchPage: NextPage = () => {
+export const SearchPage: NextPage = () => {
   const dispatch = useAppDispatch();
   const [searchTerm, setSearchTerm] = useState('');
   const [limit, setLimit] = useState(DEFAULT_LIMIT);
@@ -95,4 +96,4 @@ const SearchPage: NextPage = () => {
   );
 };
 
-export default SearchPage;
+export default wrapper.withRedux(SearchPage);

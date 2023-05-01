@@ -20,6 +20,7 @@ const config: InitialOptionsTsJest = {
     '^@features(.*)$': ['<rootDir>/src/features/$1'],
     '^@pages(.*)$': ['<rootDir>/src/pages/$1'],
     '^@hooks(.*)$': ['<rootDir>/src/hooks/$1'],
+    '^src(.*)$': ['<rootDir>/src/$1'],
   },
 };
 
