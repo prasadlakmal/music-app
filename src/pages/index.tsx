@@ -4,8 +4,9 @@ import SearchResult from '@features/search/search-result';
 import { reset, searchAsync, selectSearch } from '@features/search/searchSlice';
 import { useAppDispatch, useAppSelector } from '@hooks/redux';
 import useDebounce from '@hooks/useDebounce';
-import CameraIcon from '@mui/icons-material/PhotoCamera';
+import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
 import { Alert, AppBar, InputProps, TextField, Toolbar } from '@mui/material';
+import isNewSearchQuery from '@utils/search';
 import type { NextPage } from 'next';
 
 const DEBOUNCE_DELAY = 500;
@@ -25,7 +26,8 @@ const IndexPage: NextPage = () => {
   const showFailedMessage = status === 'failed' || status === 'no-data';
   const showResults =
     !showIdleMessage && !showLoadingSpinner && !showFailedMessage;
-  const shouldSendSearchRequest = !!searchTerm.length;
+  const shouldSendSearchRequest =
+    !!searchTerm.trim().length && !!debouncedSearchTerm.trim().length;
 
   useEffect(() => {
     if (shouldSendSearchRequest) {
@@ -34,48 +36,61 @@ const IndexPage: NextPage = () => {
   }, [debouncedSearchTerm, dispatch, limit, shouldSendSearchRequest]);
 
   const handleTextChange: InputProps['onChange'] = (e) => {
-    const value = e.target.value.trim();
-    if (!value) {
+    const value = e.target.value;
+    if (!value.trim()) {
       dispatch(reset());
-      setLimit(DEFAULT_LIMIT);
-      setSearchTerm('');
-    } else {
-      setSearchTerm(e.target.value);
     }
+    if (isNewSearchQuery(searchTerm, value)) {
+      setLimit(DEFAULT_LIMIT);
+    }
+    setSearchTerm(value);
   };
 
   const endReached = () => {
     if (!reachedLastPage) setLimit((currentLimit) => currentLimit + 10);
   };
 
+  const alertString = () => {
+    if (showIdleMessage) {
+      return 'Welcome to iTunes music search!';
+    }
+    if (showFailedMessage) {
+      return message;
+    }
+    return '';
+  };
+
   return (
     <>
       <AppBar position="sticky">
-        <Toolbar>
-          <CameraIcon sx={{ mr: 2 }} />
-          <TextField onChange={handleTextChange} />
+        <Toolbar sx={{ justifyContent: 'center' }}>
+          <LibraryMusicIcon sx={{ mr: 2 }} />
+          <TextField
+            sx={{ bgcolor: 'white', width: 500 }}
+            onChange={handleTextChange}
+            label="Search for songs, albums or artists"
+            variant="filled"
+          />
         </Toolbar>
       </AppBar>
       <main>
         {showLoadingSpinner && <CircularIndeterminate />}
-        {showIdleMessage && (
+        {(showIdleMessage || showFailedMessage) && (
           <Alert
             icon={false}
-            sx={{ justifyContent: 'center', paddingTop: '10px' }}
+            sx={{ justifyContent: 'center', mt: 2 }}
+            severity={showFailedMessage ? 'error' : 'info'}
           >
-            Welcome to iTunes music search!
+            {alertString()}
           </Alert>
         )}
-        {showFailedMessage && (
-          <Alert
-            icon={false}
-            sx={{ justifyContent: 'center', paddingTop: '10px' }}
-            severity="error"
-          >
-            {message}
-          </Alert>
+        {showResults && (
+          <SearchResult
+            data={results}
+            endReached={endReached}
+            showFooter={status === 'pending'}
+          />
         )}
-        {showResults && <SearchResult data={results} endReached={endReached} />}
       </main>
     </>
   );

@@ -1,7 +1,3 @@
-import { Skeleton } from '@mui/material';
-
-import ListItem from './list-item';
-
 const ListFooter = () => {
   return (
     <div
